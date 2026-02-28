@@ -1,0 +1,8 @@
+name = "groth-demo-setup"
+compatibility_date = "2024-04-03"
+
+[vars]
+# NEXT_PUBLIC_POCKETBASE_URL = "https://your-pocketbase-url.com"
+
+[[env.production.vars]]
+# POCKETBASE_URL = "http://your-private-tunnel-url"

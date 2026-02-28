@@ -1,0 +1,114 @@
+[
+    {
+        "name": "users",
+        "type": "auth",
+        "schema": [
+            {
+                "name": "role",
+                "type": "select",
+                "required": true,
+                "options": {
+                    "values": [
+                        "admin",
+                        "paid_user"
+                    ]
+                }
+            },
+            {
+                "name": "subscription_status",
+                "type": "bool",
+                "required": false
+            },
+            {
+                "name": "last_active",
+                "type": "date",
+                "required": false
+            }
+        ],
+        "listRule": "id = @request.auth.id || @request.auth.role = 'admin'",
+        "viewRule": "id = @request.auth.id || @request.auth.role = 'admin'",
+        "createRule": "",
+        "updateRule": "id = @request.auth.id",
+        "deleteRule": "id = @request.auth.id || @request.auth.role = 'admin'"
+    },
+    {
+        "name": "records",
+        "type": "base",
+        "schema": [
+            {
+                "name": "title",
+                "type": "text",
+                "required": true,
+                "options": {
+                    "max": 100
+                }
+            },
+            {
+                "name": "content",
+                "type": "json",
+                "required": false
+            },
+            {
+                "name": "owner",
+                "type": "relation",
+                "required": true,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": true,
+                    "maxSelect": 1
+                }
+            },
+            {
+                "name": "is_public",
+                "type": "bool",
+                "required": false
+            },
+            {
+                "name": "attachments",
+                "type": "file",
+                "required": false,
+                "options": {
+                    "maxSelect": 5,
+                    "maxSize": 5242880,
+                    "mimeTypes": []
+                }
+            }
+        ],
+        "listRule": "is_public = true || owner = @request.auth.id",
+        "viewRule": "is_public = true || owner = @request.auth.id",
+        "createRule": "@request.auth.id != \"\" && @request.auth.subscription_status = true && owner = @request.auth.id",
+        "updateRule": "owner = @request.auth.id && @request.auth.subscription_status = true",
+        "deleteRule": "owner = @request.auth.id && @request.auth.subscription_status = true"
+    },
+    {
+        "name": "login_logs",
+        "type": "base",
+        "schema": [
+            {
+                "name": "user",
+                "type": "relation",
+                "required": true,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": true,
+                    "maxSelect": 1
+                }
+            },
+            {
+                "name": "ip",
+                "type": "text",
+                "required": false
+            },
+            {
+                "name": "user_agent",
+                "type": "text",
+                "required": false
+            }
+        ],
+        "listRule": "user = @request.auth.id || @request.auth.role = 'admin'",
+        "viewRule": "user = @request.auth.id || @request.auth.role = 'admin'",
+        "createRule": "user = @request.auth.id",
+        "updateRule": null,
+        "deleteRule": "@request.auth.role = 'admin'"
+    }
+]
