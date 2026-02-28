@@ -1,4 +1,4 @@
-import { getPocketBase } from '@/lib/pocketbase';
+import { getPocketBase } from '@/lib/pb-server';
 import { Plus, Database, Cpu } from 'lucide-react';
 import Link from 'next/link';
 

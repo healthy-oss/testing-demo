@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getClientPocketBase } from '@/lib/pocketbase';
+import { getClientPocketBase } from '@/lib/pb-client';
 import { useRouter } from 'next/navigation';
 import { LogIn, Loader2 } from 'lucide-react';
 
