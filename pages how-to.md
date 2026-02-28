@@ -6,13 +6,12 @@
 - Cloudflare 계정 및 [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) 설치.
 - 실행 중인 PocketBase 서버 및 Cloudflare Tunnel (또는 공인 도메인).
 
-## 2. 빌드 설정
-Cloudflare Pages 대시보드에서 프로젝트를 생성할 때 다음 설정을 사용하십시오:
+Cloudflare Pages 대시보드에서 프로젝트를 생성할 때 다음 설정을 반드시 확인하십시오:
 
 - **Framework preset**: `Next.js`
 - **Build command**: `npm run build`
-- **Build output directory**: `.next`
-- **Node.js version**: `20.x` 이상
+- **Build output directory**: `.vercel/output/static`
+- **Node.js version**: `18.x` 또는 `20.x` 이상
 
 ## 3. 환경 변수 설정
 Cloudflare Pages의 **Settings > Functions > Compatibility flags**에서 `nextjs_compute_js` 가 활성화되어 있어야 합니다. 그 후 다음 환경 변수를 설정하십시오:
@@ -27,16 +26,19 @@ Cloudflare Pages의 **Settings > Functions > Compatibility flags**에서 `nextjs
 
 ```bash
 # 로컬 빌드 및 프리뷰
-npx wrangler pages dev .next
+npm run build
+npx wrangler pages dev .vercel/output/static
 
-# 수동 배포
-npx wrangler pages deploy .next
+# 수동 배포 (GitHub 연동이 아닌 경우)
+npx wrangler pages deploy .vercel/output/static
 ```
 
-## 5. 주의 사항
-- **Edge Runtime**: 현재 프로젝트는 Cloudflare의 Edge Runtime에서 최적으로 동작하도록 구성되어 있습니다.
-- **TLS 1.3**: Next.js와 PocketBase 간의 통신은 반드시 HTTPS(TLS 1.3)를 통해 이루어지도록 설정하십시오.
-- **Auth Cookie**: Middleware가 쿠키를 올바르게 인식하도록 `pb_auth` 쿠키가 `SameSite=Lax` 및 적절한 도메인 설정을 가지고 있는지 확인하십시오.
+## 5. 중요: 배포 명령어 에러 수정
+만약 빌드 로그에서 `Executing user deploy command: npx wrangler deploy`와 같은 에러가 발생하며 중단된다면:
+1. Cloudflare Pages 대시보드 **Settings > Build & deployments**로 이동합니다.
+2. **Build settings** 섹션을 확인합니다.
+3. 빌드 명령어(`Build command`)에 `&& npx wrangler deploy`가 포함되어 있다면 제거하고 `npm run build`만 남겨둡니다.
+4. 별도의 **Deploy command** 설정이 있다면 비워두십시오. Cloudflare Pages는 빌드 성공 후 자동으로 결과물을 배포합니다.
 
 ---
 > [!NOTE]
