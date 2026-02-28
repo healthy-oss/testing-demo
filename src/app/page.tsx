@@ -2,6 +2,8 @@ import { getPocketBase } from '@/lib/pb-server';
 import { Plus, Database, Cpu } from 'lucide-react';
 import Link from 'next/link';
 
+export const runtime = 'edge';
+
 export default async function HomePage() {
     const pb = await getPocketBase();
 

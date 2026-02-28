@@ -8,7 +8,7 @@ export async function getPocketBase() {
     const pb = new PocketBase(process.env.POCKETBASE_URL || 'http://127.0.0.1:8090');
 
     // SSR 환경에서 쿠키를 통해 인증 상태를 복원합니다.
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const authCookie = cookieStore.get('pb_auth');
 
     if (authCookie) {
